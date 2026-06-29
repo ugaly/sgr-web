@@ -1,0 +1,139 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Outfit", ui-sans-serif, system-ui, sans-serif;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-light: var(--primary-light);
+  --color-primary-deep: var(--primary-deep);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-sky: var(--sky);
+  --color-sky-soft: var(--sky-soft);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
+  --color-offline: var(--offline);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+
+  --shadow-elevated: 0 12px 34px -16px rgba(16, 24, 40, 0.10), 0 4px 12px -4px rgba(16, 24, 40, 0.06);
+  --shadow-soft: 0 1px 2px 0 rgba(16, 24, 40, 0.04), 0 1px 3px 0 rgba(16, 24, 40, 0.06);
+
+  --background-image-brand: linear-gradient(135deg, #1C50A8 0%, #10367D 100%);
+}
+
+:root {
+  --radius: 0.75rem;
+
+  /* Surfaces — TailAdmin neutral system */
+  --background: #F9FAFB;
+  --foreground: #101828;
+  --card: #FFFFFF;
+  --card-foreground: #101828;
+  --popover: #FFFFFF;
+  --popover-foreground: #101828;
+
+  /* Brand — keep SGR navy */
+  --primary: #10367D;
+  --primary-foreground: #FFFFFF;
+  --primary-light: #1C50A8;
+  --primary-deep: #081C45;
+
+  --secondary: #F2F4F7;
+  --secondary-foreground: #101828;
+
+  --muted: #F2F4F7;
+  --muted-foreground: #667085;
+
+  --accent: #EFF4FB;
+  --accent-foreground: #10367D;
+
+  --sky: #5B9BD5;
+  --sky-soft: #DCE9F8;
+
+  --destructive: #F04438;
+  --destructive-foreground: #FFFFFF;
+  --success: #12B76A;
+  --warning: #F79009;
+  --info: #2E90FA;
+  --offline: #98A2B3;
+
+  --border: #E4E7EC;
+  --input: #D0D5DD;
+  --ring: #10367D;
+
+  /* White sidebar — TailAdmin style */
+  --sidebar: #FFFFFF;
+  --sidebar-foreground: #344054;
+  --sidebar-accent: #EFF4FB;
+  --sidebar-accent-foreground: #10367D;
+  --sidebar-border: #E4E7EC;
+
+  --chart-1: #10367D;
+  --chart-2: #5B9BD5;
+  --chart-3: #3E74CE;
+  --chart-4: #12B76A;
+  --chart-5: #F79009;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  html, body {
+    font-family: var(--font-sans);
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "ss01", "cv11";
+  }
+}
+
+@keyframes train-pulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(91, 155, 213, 0.7); }
+  50% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(91, 155, 213, 0); }
+}
+@keyframes ping-slow {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+.animate-ping-slow { animation: ping-slow 2.2s cubic-bezier(0, 0, 0.2, 1) infinite; }
+
+.sgr-station-label {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(16, 54, 125, 0.12);
+  border-radius: 6px;
+  padding: 2px 6px;
+  box-shadow: 0 2px 8px rgba(16, 24, 40, 0.08);
+  white-space: nowrap;
+}
