@@ -1,5 +1,13 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { TrainFront, ShieldCheck, Activity, Eye, EyeOff, ArrowRight } from "lucide-react";
+import {
+  TrainFront,
+  ShieldCheck,
+  Eye,
+  EyeOff,
+  X,
+  Activity,
+  Users,
+} from "lucide-react";
 import { useEffect, useState, type FormEvent } from "react";
 
 export const Route = createFileRoute("/")({
@@ -17,6 +25,16 @@ const BRAND_IMAGES = [
   "https://images.pexels.com/photos/29033695/pexels-photo-29033695.jpeg",
   "https://images.pexels.com/photos/36644775/pexels-photo-36644775.jpeg",
   "https://images.pexels.com/photos/29508383/pexels-photo-29508383.jpeg",
+];
+
+const WEEK = [
+  { d: "Sun", n: 22 },
+  { d: "Mon", n: 23 },
+  { d: "Tue", n: 24 },
+  { d: "Wed", n: 25, active: true },
+  { d: "Thu", n: 26 },
+  { d: "Fri", n: 27 },
+  { d: "Sat", n: 28 },
 ];
 
 function LoginPage() {
@@ -45,78 +63,166 @@ function LoginPage() {
   }
 
   return (
-    <div className="relative flex min-h-screen overflow-hidden bg-background">
-      {/* LEFT — Brand panel with oval rounded edge */}
-      <aside
-        className="relative hidden lg:flex flex-col justify-between w-[46%] xl:w-[42%] p-12 text-white overflow-hidden"
-        style={{
-          borderTopRightRadius: "60% 100%",
-          borderBottomRightRadius: "60% 100%",
-        }}
-      >
-        {/* Photographic background — crossfading slideshow */}
-        {BRAND_IMAGES.map((src, i) => (
-          <div
-            key={src}
-            aria-hidden
-            className="pointer-events-none absolute inset-0 bg-cover bg-center transition-opacity duration-[1500ms] ease-in-out"
-            style={{
-              backgroundImage: `url('${src}')`,
-              opacity: slide === i ? 1 : 0,
-              transform: slide === i ? "scale(1.05)" : "scale(1)",
-              transition: "opacity 1500ms ease-in-out, transform 6000ms ease-out",
-            }}
-          />
-        ))}
-        {/* Navy gradient overlay for readability */}
-        <div
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(135deg, rgba(28,80,168,0.48) 0%, rgba(16,54,125,0.56) 50%, rgba(8,28,69,0.70) 100%)",
-          }}
-        />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/45 via-black/20 to-transparent" />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-black/10" />
-        {/* decorative orbs */}
-        <div className="pointer-events-none absolute -left-24 top-24 size-72 rounded-full bg-sky/20 blur-3xl" />
-        <div className="pointer-events-none absolute right-10 bottom-10 size-80 rounded-full bg-white/5 blur-3xl" />
-        <div className="pointer-events-none absolute inset-y-0 right-[18%] w-px bg-gradient-to-b from-transparent via-white/20 to-transparent" />
-
-        <div className="relative flex items-center gap-3">
-          <div className="grid size-12 place-items-center rounded-2xl bg-white/10 ring-1 ring-white/20 backdrop-blur">
-            <TrainFront className="size-6" />
+    <div className="flex min-h-screen items-center justify-center bg-[#aeb4c0] p-4 sm:p-6 lg:p-8">
+      <div className="grid w-full max-w-[1080px] overflow-hidden rounded-[28px] bg-card shadow-elevated lg:grid-cols-2">
+        {/* LEFT — Form */}
+        <section className="relative flex flex-col bg-gradient-to-br from-secondary/60 via-card to-accent/40 px-6 py-8 sm:px-10 lg:px-12">
+          <div className="flex items-center gap-2.5">
+            <div className="grid size-9 place-items-center rounded-xl bg-primary text-primary-foreground">
+              <TrainFront className="size-5" />
+            </div>
+            <span className="text-[15px] font-bold tracking-tight text-foreground">SGR Guardian</span>
           </div>
-          <div className="leading-tight">
-            <div className="text-lg font-bold tracking-tight">SGR Guardian</div>
-            <div className="text-[11px] uppercase tracking-[0.18em] text-white/60">
-              Command Center
+
+          <div className="flex flex-1 flex-col justify-center py-8">
+            <div className="mx-auto w-full max-w-sm">
+              <h1 className="text-center text-3xl font-extrabold tracking-tight text-foreground">
+                Welcome back
+              </h1>
+              <p className="mt-2 text-center text-[13px] text-muted-foreground">
+                Sign in to the corridor command center
+              </p>
+
+              <form onSubmit={handleSubmit} className="mt-8 space-y-4">
+                <Field label="Work email">
+                  <input
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="you@sgr.tz"
+                    className="w-full rounded-xl border border-border bg-card/70 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground transition focus:border-sky focus:bg-card focus:outline-none focus:ring-4 focus:ring-sky/15"
+                  />
+                </Field>
+
+                <Field
+                  label="Password"
+                  right={
+                    <button type="button" className="text-[11px] font-semibold text-sky hover:underline">
+                      Forgot?
+                    </button>
+                  }
+                >
+                  <div className="relative">
+                    <input
+                      type={showPwd ? "text" : "password"}
+                      required
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="••••••••"
+                      className="w-full rounded-xl border border-border bg-card/70 px-4 py-3 pr-12 text-sm text-foreground placeholder:text-muted-foreground transition focus:border-sky focus:bg-card focus:outline-none focus:ring-4 focus:ring-sky/15"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPwd((s) => !s)}
+                      className="absolute right-2 top-1/2 grid size-9 -translate-y-1/2 place-items-center rounded-lg text-muted-foreground hover:bg-muted"
+                      aria-label="Toggle password visibility"
+                    >
+                      {showPwd ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                    </button>
+                  </div>
+                </Field>
+
+                <label className="flex select-none items-center gap-2 text-[13px] text-muted-foreground">
+                  <input
+                    type="checkbox"
+                    defaultChecked
+                    className="size-4 rounded border-border accent-[color:var(--primary)]"
+                  />
+                  Keep me signed in on this device
+                </label>
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="mt-1 w-full rounded-xl bg-primary py-3.5 text-sm font-semibold text-primary-foreground shadow-soft transition hover:bg-primary-light disabled:opacity-70"
+                >
+                  {loading ? "Signing in…" : "Sign in"}
+                </button>
+              </form>
             </div>
           </div>
-        </div>
 
-        <div className="relative max-w-md">
-          <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-white/80 ring-1 ring-white/15">
-            <span className="size-1.5 rounded-full bg-success animate-pulse" />
-            Live · Dar — Dodoma corridor
+          <div className="flex items-center justify-between text-[12px] text-muted-foreground">
+            <span>
+              Need access?{" "}
+              <Link to="/" className="font-semibold text-primary hover:underline">
+                Request account
+              </Link>
+            </span>
+            <Link to="/" className="font-medium underline hover:text-foreground">
+              Terms &amp; Conditions
+            </Link>
           </div>
-          <h1 className="mt-5 text-4xl xl:text-5xl font-extrabold leading-[1.05] tracking-tight">
-            Eyes on every<br />kilometre of rail.
-          </h1>
-          <p className="mt-4 text-[15px] text-white/70 leading-relaxed">
-            One command center for patrol teams, supervisors, incident reports
-            and live corridor intelligence across the Tanzania Standard Gauge Railway.
-          </p>
+        </section>
 
-          <div className="mt-8 grid grid-cols-3 gap-3 max-w-sm">
-            <Stat icon={ShieldCheck} value="96%" label="Coverage" />
-            <Stat icon={Activity} value="4m 12s" label="Avg response" />
-            <Stat icon={TrainFront} value="78" label="On duty" />
+        {/* RIGHT — Photo slideshow with floating cards */}
+        <section className="relative hidden min-h-[560px] overflow-hidden rounded-[24px] lg:m-2 lg:block">
+          {BRAND_IMAGES.map((src, i) => (
+            <div
+              key={src}
+              aria-hidden
+              className="absolute inset-0 bg-cover bg-center"
+              style={{
+                backgroundImage: `url('${src}')`,
+                opacity: slide === i ? 1 : 0,
+                transform: slide === i ? "scale(1.06)" : "scale(1)",
+                transition: "opacity 1500ms ease-in-out, transform 6000ms ease-out",
+              }}
+            />
+          ))}
+          <div className="absolute inset-0 bg-gradient-to-t from-primary-deep/70 via-primary/10 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/25 to-transparent" />
+
+          {/* Close */}
+          <div className="absolute right-4 top-4 grid size-9 place-items-center rounded-full bg-white/90 text-foreground shadow-soft">
+            <X className="size-4" />
           </div>
-        </div>
 
-        <div className="relative space-y-4">
-          <div className="flex items-center gap-2">
+          {/* Top floating card — live shift */}
+          <div className="absolute left-5 top-5 w-[230px] rounded-2xl bg-white/85 p-3 shadow-elevated ring-1 ring-white/40 backdrop-blur-md">
+            <div className="flex items-center gap-2">
+              <span className="grid size-8 place-items-center rounded-lg bg-primary/10 text-primary">
+                <ShieldCheck className="size-4" />
+              </span>
+              <div className="min-w-0">
+                <div className="text-[12px] font-bold text-foreground">Corridor shift brief</div>
+                <div className="text-[10px] text-muted-foreground">06:00 – 18:00 EAT</div>
+              </div>
+            </div>
+            <div className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-success/10 px-2 py-0.5 text-[10px] font-bold text-success">
+              <span className="size-1.5 rounded-full bg-success" /> Live · Dar — Dodoma
+            </div>
+          </div>
+
+          {/* Week strip */}
+          <div className="absolute inset-x-5 top-[44%] flex justify-between rounded-2xl bg-white/15 px-3 py-3 text-white backdrop-blur-sm ring-1 ring-white/20">
+            {WEEK.map((w) => (
+              <div key={w.d} className="text-center">
+                <div className="text-[10px] font-medium text-white/70">{w.d}</div>
+                <div
+                  className={`mt-1 grid size-7 place-items-center rounded-full text-[12px] font-bold ${
+                    w.active ? "bg-white text-primary" : "text-white"
+                  }`}
+                >
+                  {w.n}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Bottom floating card — stats */}
+          <div className="absolute bottom-5 left-5 right-5 rounded-2xl bg-white/90 p-4 shadow-elevated ring-1 ring-white/40 backdrop-blur-md">
+            <div className="text-[12px] font-bold text-foreground">Live operations</div>
+            <div className="mt-3 grid grid-cols-3 gap-3">
+              <MiniStat icon={ShieldCheck} value="96%" label="Coverage" />
+              <MiniStat icon={Activity} value="4m12s" label="Response" />
+              <MiniStat icon={Users} value="78" label="On duty" />
+            </div>
+          </div>
+
+          {/* Slide dots */}
+          <div className="absolute bottom-[104px] left-1/2 flex -translate-x-1/2 items-center gap-2">
             {BRAND_IMAGES.map((src, i) => (
               <button
                 key={src}
@@ -124,138 +230,18 @@ function LoginPage() {
                 aria-label={`Show image ${i + 1}`}
                 onClick={() => setSlide(i)}
                 className={`h-1.5 rounded-full transition-all duration-500 ${
-                  slide === i ? "w-8 bg-white" : "w-2 bg-white/35 hover:bg-white/60"
+                  slide === i ? "w-7 bg-white" : "w-2 bg-white/40 hover:bg-white/70"
                 }`}
               />
             ))}
           </div>
-          <div className="flex items-center justify-between text-[11px] text-white/50">
-            <div>© 2026 Tanzania Railways Corporation</div>
-            <div className="flex gap-4">
-              <span>Privacy</span>
-              <span>Security</span>
-              <span>Status</span>
-            </div>
-          </div>
-        </div>
-      </aside>
-
-      {/* RIGHT — Login form */}
-      <section className="flex flex-1 items-center justify-center px-6 py-10 lg:px-16">
-        <div className="w-full max-w-md">
-          <div className="lg:hidden mb-8 flex items-center gap-3">
-            <div className="grid size-11 place-items-center rounded-2xl bg-primary text-primary-foreground">
-              <TrainFront className="size-5" />
-            </div>
-            <div className="leading-tight">
-              <div className="text-base font-bold">SGR Guardian</div>
-              <div className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-                Command Center
-              </div>
-            </div>
-          </div>
-
-          <div className="mb-1 text-[11px] font-bold uppercase tracking-[0.2em] text-sky">
-            Management Access
-          </div>
-          <h2 className="text-3xl font-extrabold tracking-tight text-foreground">
-            Welcome back.
-          </h2>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Sign in to the corridor command dashboard.
-          </p>
-
-          <form onSubmit={handleSubmit} className="mt-8 space-y-4">
-            <Field label="Work email">
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@sgr.tz"
-                className="w-full rounded-xl border border-border bg-card px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-sky focus:outline-none focus:ring-4 focus:ring-sky/15 transition"
-              />
-            </Field>
-
-            <Field
-              label="Password"
-              right={
-                <button type="button" className="text-[11px] font-semibold text-sky hover:underline">
-                  Forgot?
-                </button>
-              }
-            >
-              <div className="relative">
-                <input
-                  type={showPwd ? "text" : "password"}
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="w-full rounded-xl border border-border bg-card px-4 py-3 pr-12 text-sm text-foreground placeholder:text-muted-foreground focus:border-sky focus:outline-none focus:ring-4 focus:ring-sky/15 transition"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPwd((s) => !s)}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 grid size-9 place-items-center rounded-lg text-muted-foreground hover:bg-muted"
-                  aria-label="Toggle password visibility"
-                >
-                  {showPwd ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-                </button>
-              </div>
-            </Field>
-
-            <label className="flex items-center gap-2 text-[13px] text-muted-foreground select-none">
-              <input
-                type="checkbox"
-                defaultChecked
-                className="size-4 rounded border-border accent-[color:var(--primary)]"
-              />
-              Keep me signed in on this device
-            </label>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="group relative mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-3.5 text-sm font-semibold text-primary-foreground shadow-elevated transition hover:bg-primary-light disabled:opacity-70"
-            >
-              {loading ? "Signing in…" : "Sign in to command center"}
-              <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
-            </button>
-
-            <div className="relative my-2">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-border" />
-              </div>
-              <div className="relative flex justify-center">
-                <span className="bg-background px-3 text-[11px] uppercase tracking-wider text-muted-foreground">
-                  Or
-                </span>
-              </div>
-            </div>
-
-            <button
-              type="button"
-              className="flex w-full items-center justify-center gap-2 rounded-xl border border-border bg-card py-3 text-sm font-semibold text-foreground hover:bg-accent transition"
-            >
-              <ShieldCheck className="size-4 text-sky" />
-              Continue with Single Sign-On (SSO)
-            </button>
-          </form>
-
-          <p className="mt-8 text-center text-[12px] text-muted-foreground">
-            Need access?{" "}
-            <Link to="/" className="font-semibold text-primary hover:underline">
-              Request a manager account
-            </Link>
-          </p>
-        </div>
-      </section>
+        </section>
+      </div>
     </div>
   );
 }
 
-function Stat({
+function MiniStat({
   icon: Icon,
   value,
   label,
@@ -265,10 +251,10 @@ function Stat({
   label: string;
 }) {
   return (
-    <div className="rounded-2xl bg-white/8 p-3 ring-1 ring-white/10 backdrop-blur">
-      <Icon className="size-4 text-sky" />
-      <div className="mt-2 text-lg font-extrabold leading-none">{value}</div>
-      <div className="mt-1 text-[10px] uppercase tracking-wider text-white/60">{label}</div>
+    <div className="rounded-xl bg-secondary/60 p-2.5 text-center">
+      <Icon className="mx-auto size-4 text-primary" />
+      <div className="mt-1 text-[14px] font-extrabold leading-none text-foreground">{value}</div>
+      <div className="mt-0.5 text-[9px] uppercase tracking-wider text-muted-foreground">{label}</div>
     </div>
   );
 }
