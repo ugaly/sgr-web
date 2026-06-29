@@ -9,8 +9,8 @@ const STATUS: Record<string, { label: string; cls: string }> = {
 
 export function TeamsGrid() {
   return (
-    <section className="flex h-full flex-col rounded-2xl border border-border bg-card shadow-soft">
-      <header className="flex items-center justify-between px-6 py-5 border-b border-border">
+    <section className="flex h-full flex-col overflow-hidden rounded-2xl border border-border/80 bg-card/80 shadow-soft backdrop-blur-md">
+      <header className="flex items-center justify-between border-b border-border/70 px-6 py-5 glass-tint">
         <div>
           <h3 className="text-[15px] font-bold text-foreground">Patrol Teams</h3>
           <p className="text-xs text-muted-foreground mt-0.5">{TEAMS.length} active units across the corridor</p>
@@ -27,7 +27,7 @@ export function TeamsGrid() {
           return (
             <article
               key={t.id}
-              className="group relative overflow-hidden rounded-xl border border-border bg-card p-4 transition-all hover:border-primary/30 hover:shadow-soft"
+              className="group relative overflow-hidden rounded-xl border border-border/80 bg-card/70 p-4 backdrop-blur-sm transition-all hover:border-primary/25 hover:bg-card hover:shadow-soft"
             >
               <div className="flex items-start justify-between">
                 <div>

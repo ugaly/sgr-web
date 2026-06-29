@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { ArrowUpRight, ArrowDownRight } from "lucide-react";
+import { ArrowUpRight, ArrowDownRight, TrendingUp } from "lucide-react";
 
 type Props = {
   label: string;
@@ -10,6 +10,7 @@ type Props = {
   tone?: "primary" | "sky" | "success" | "warning" | "danger";
   hint?: string;
   spark?: number[];
+  featured?: boolean;
 };
 
 const TONE: Record<NonNullable<Props["tone"]>, { bg: string; fg: string; stroke: string; fill: string }> = {
@@ -54,27 +55,46 @@ export function StatCard({
   tone = "primary",
   hint,
   spark = DEFAULT_SPARK,
+  featured = false,
 }: Props) {
   const t = TONE[tone];
+
+  if (featured) {
+    return (
+      <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary via-primary-light to-primary-deep p-5 text-white shadow-elevated transition hover:-translate-y-0.5">
+        <div className="pointer-events-none absolute -right-10 -top-10 size-32 rounded-full bg-white/10 blur-2xl" />
+        <div className="relative flex items-start justify-between gap-3">
+          <div className="grid size-11 place-items-center rounded-xl bg-white/15 ring-1 ring-white/20 backdrop-blur">
+            <Icon className="size-5" />
+          </div>
+          <span className="grid size-8 place-items-center rounded-full bg-white/15 text-white ring-1 ring-white/20 transition group-hover:bg-white/25">
+            <ArrowUpRight className="size-4" />
+          </span>
+        </div>
+        <div className="relative mt-6">
+          <div className="text-[12.5px] font-medium text-white/75">{label}</div>
+          <div className="mt-1 text-[34px] font-extrabold leading-none tracking-tight">{value}</div>
+        </div>
+        {(hint || delta) && (
+          <div className="relative mt-4 flex items-center gap-1.5 border-t border-white/15 pt-3 text-[12px] text-white/80">
+            <TrendingUp className="size-3.5" />
+            {delta ? <span className="font-semibold">{delta}</span> : null}
+            <span className="truncate">{hint}</span>
+          </div>
+        )}
+      </div>
+    );
+  }
+
   return (
-    <div className="group relative overflow-hidden rounded-2xl border border-border bg-card p-5 transition hover:-translate-y-0.5 hover:shadow-elevated">
+    <div className="group relative overflow-hidden rounded-2xl border border-border bg-card p-5 transition hover:-translate-y-0.5 hover:border-primary/20 hover:shadow-elevated">
       <div className="flex items-start justify-between gap-3">
         <div className={`grid size-11 place-items-center rounded-xl ${t.bg} ${t.fg}`}>
           <Icon className="size-5" />
         </div>
-        {delta && (
-          <div
-            className={[
-              "inline-flex shrink-0 items-center gap-0.5 rounded-full px-2 py-1 text-[11px] font-bold ring-1",
-              trend === "up"
-                ? "bg-success/10 text-success ring-success/20"
-                : "bg-destructive/10 text-destructive ring-destructive/20",
-            ].join(" ")}
-          >
-            {trend === "up" ? <ArrowUpRight className="size-3" /> : <ArrowDownRight className="size-3" />}
-            {delta}
-          </div>
-        )}
+        <span className="grid size-8 place-items-center rounded-full border border-border bg-card text-muted-foreground transition group-hover:border-primary/30 group-hover:bg-accent group-hover:text-primary">
+          <ArrowUpRight className="size-4" />
+        </span>
       </div>
 
       <div className="mt-5 flex items-end justify-between gap-3">
@@ -84,14 +104,24 @@ export function StatCard({
             {value}
           </div>
         </div>
-        <div className="opacity-90 group-hover:opacity-100 transition-opacity">
+        <div className="opacity-90 transition-opacity group-hover:opacity-100">
           <Sparkline data={spark} stroke={t.stroke} fill={t.fill} />
         </div>
       </div>
 
-      {hint && (
-        <div className="mt-4 border-t border-border pt-3 text-[12px] text-muted-foreground">
-          {hint}
+      {(hint || delta) && (
+        <div className="mt-4 flex items-center gap-1.5 border-t border-border pt-3 text-[12px] text-muted-foreground">
+          {delta && (
+            <span
+              className={`inline-flex items-center gap-0.5 rounded-md px-1.5 py-0.5 text-[11px] font-bold ${
+                trend === "up" ? "bg-success/10 text-success" : "bg-destructive/10 text-destructive"
+              }`}
+            >
+              {trend === "up" ? <ArrowUpRight className="size-3" /> : <ArrowDownRight className="size-3" />}
+              {delta}
+            </span>
+          )}
+          {hint && <span className="truncate">{hint}</span>}
         </div>
       )}
     </div>

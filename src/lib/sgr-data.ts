@@ -36,6 +36,18 @@ export const OFFICERS: Officer[] = [
   { id: "o9", name: "Pendo Massawe",  team: "Echo-05",  section: "Dodoma",      status: "active", lat: -6.1722, lng: 35.7395, avatarColor: "#5B9BD5" },
 ];
 
+export type IncidentAttachment = {
+  id: string;
+  type: "image" | "video" | "audio";
+  name: string;
+  url: string;
+  thumbnail?: string;
+  duration?: string;
+  size?: string;
+  uploadedBy: string;
+  uploadedAt: string;
+};
+
 export type Incident = {
   id: string;
   code: string;
@@ -49,17 +61,92 @@ export type Incident = {
   time: string;
   lat: number;
   lng: number;
+  description: string;
+  phone: string;
+  supervisor: string;
+  attachments: IncidentAttachment[];
 };
 
 export const INCIDENTS: Incident[] = [
-  { id: "i1", code: "RPT-2841", title: "Cattle on track near KM-118",        type: "Trespass",          priority: "high",   status: "In Progress", section: "Ngerengere", reporter: "Asha Mwakyusa", team: "Bravo-02",   time: "8 min ago",  lat: -6.756, lng: 38.124 },
-  { id: "i2", code: "RPT-2840", title: "Fence cut detected, eastern side",   type: "Vandalism",         priority: "high",   status: "Submitted",   section: "Kilosa",     reporter: "Lulu Mwakasege",team: "Charlie-03", time: "22 min ago", lat: -6.836, lng: 36.984 },
-  { id: "i3", code: "RPT-2839", title: "Suspicious group near siding",       type: "Suspicious activity",priority: "medium",status: "Review",      section: "Morogoro",   reporter: "Joseph Mhina",  team: "Charlie-03", time: "1 hr ago",   lat: -6.8235, lng: 37.6606 },
-  { id: "i4", code: "RPT-2838", title: "Loose ballast — KM-204",             type: "Track damage",      priority: "medium", status: "In Progress", section: "Gulwe",      reporter: "Baraka Lyimo",  team: "Delta-04",   time: "2 hr ago",   lat: -6.49, lng: 36.471 },
-  { id: "i5", code: "RPT-2837", title: "Cable theft attempt, signal box 12", type: "Theft",             priority: "high",   status: "Resolved",    section: "Pugu",       reporter: "Hamisi Juma",   team: "Alpha-01",   time: "3 hr ago",   lat: -6.8836, lng: 39.0833 },
-  { id: "i6", code: "RPT-2836", title: "Pedestrian crossing illegally",      type: "Trespass",          priority: "low",    status: "Resolved",    section: "Soga",       reporter: "Neema Mushi",   team: "Alpha-01",   time: "5 hr ago",   lat: -6.913, lng: 38.93 },
-  { id: "i7", code: "RPT-2835", title: "Officer requesting medical support", type: "Medical",           priority: "high",   status: "Resolved",    section: "Dodoma",     reporter: "Pendo Massawe", team: "Echo-05",    time: "6 hr ago",   lat: -6.1722, lng: 35.7395 },
-  { id: "i8", code: "RPT-2834", title: "Graffiti on station wall",           type: "Vandalism",         priority: "low",    status: "Review",      section: "Ruvu",       reporter: "Salim Komba",   team: "Bravo-02",   time: "9 hr ago",   lat: -6.842, lng: 38.694 },
+  {
+    id: "i1", code: "RPT-2841", title: "Cattle on track near KM-118", type: "Trespass", priority: "high", status: "In Progress",
+    section: "Ngerengere", reporter: "Asha Mwakyusa", team: "Bravo-02", time: "8 min ago", lat: -6.756, lng: 38.124,
+    phone: "+255 713 000 204", supervisor: "Maj. Rehema Sanga",
+    description: "Three cattle spotted on the main line near KM-118. Train SGR-408 slowed to 40 km/h. Patrol dispatched to clear track and identify owner.",
+    attachments: [
+      { id: "a1", type: "image", name: "track-view-km118.jpg", url: "https://images.pexels.com/photos/29508383/pexels-photo-29508383.jpeg", size: "2.4 MB", uploadedBy: "Asha Mwakyusa", uploadedAt: "8 min ago" },
+      { id: "a2", type: "image", name: "cattle-on-line.jpg", url: "https://images.pexels.com/photos/36644775/pexels-photo-36644775.jpeg", size: "1.8 MB", uploadedBy: "Asha Mwakyusa", uploadedAt: "7 min ago" },
+      { id: "a3", type: "audio", name: "field-report-2841.mp3", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", duration: "0:42", size: "640 KB", uploadedBy: "Asha Mwakyusa", uploadedAt: "8 min ago" },
+    ],
+  },
+  {
+    id: "i2", code: "RPT-2840", title: "Fence cut detected, eastern side", type: "Vandalism", priority: "high", status: "Submitted",
+    section: "Kilosa", reporter: "Lulu Mwakasege", team: "Charlie-03", time: "22 min ago", lat: -6.836, lng: 36.984,
+    phone: "+255 712 555 901", supervisor: "Capt. John Mwakalinga",
+    description: "Perimeter fence cut on eastern side near signal box. Fresh tool marks visible. Access road footprints leading away from site.",
+    attachments: [
+      { id: "a4", type: "image", name: "fence-damage.jpg", url: "https://images.pexels.com/photos/29033695/pexels-photo-29033695.jpeg", size: "3.1 MB", uploadedBy: "Lulu Mwakasege", uploadedAt: "22 min ago" },
+      { id: "a5", type: "video", name: "perimeter-walkthrough.mp4", url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4", thumbnail: "https://images.pexels.com/photos/26928541/pexels-photo-26928541.png", duration: "1:24", size: "8.2 MB", uploadedBy: "Lulu Mwakasege", uploadedAt: "21 min ago" },
+    ],
+  },
+  {
+    id: "i3", code: "RPT-2839", title: "Suspicious group near siding", type: "Suspicious activity", priority: "medium", status: "Review",
+    section: "Morogoro", reporter: "Joseph Mhina", team: "Charlie-03", time: "1 hr ago", lat: -6.8235, lng: 37.6606,
+    phone: "+255 713 000 206", supervisor: "Maj. Joseph Lyimo",
+    description: "Group of five individuals observed near freight siding. No immediate threat but behaviour flagged by AI camera analytics.",
+    attachments: [
+      { id: "a6", type: "image", name: "cctv-capture-01.jpg", url: "https://images.pexels.com/photos/26928541/pexels-photo-26928541.png", size: "1.2 MB", uploadedBy: "System · CAM-07", uploadedAt: "1 hr ago" },
+      { id: "a7", type: "image", name: "cctv-capture-02.jpg", url: "https://images.pexels.com/photos/29508383/pexels-photo-29508383.jpeg", size: "1.1 MB", uploadedBy: "System · CAM-07", uploadedAt: "1 hr ago" },
+    ],
+  },
+  {
+    id: "i4", code: "RPT-2838", title: "Loose ballast — KM-204", type: "Track damage", priority: "medium", status: "In Progress",
+    section: "Gulwe", reporter: "Baraka Lyimo", team: "Delta-04", time: "2 hr ago", lat: -6.49, lng: 36.471,
+    phone: "+255 712 000 114", supervisor: "Capt. Faraja Mbwambo",
+    description: "Track inspection flagged loose ballast and minor rail displacement at KM-204. Engineering team notified. Speed restriction in effect.",
+    attachments: [
+      { id: "a8", type: "image", name: "ballast-km204.jpg", url: "https://images.pexels.com/photos/36644775/pexels-photo-36644775.jpeg", size: "2.7 MB", uploadedBy: "Baraka Lyimo", uploadedAt: "2 hr ago" },
+      { id: "a9", type: "audio", name: "engineer-voice-note.mp3", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3", duration: "1:08", size: "920 KB", uploadedBy: "Baraka Lyimo", uploadedAt: "1 hr ago" },
+    ],
+  },
+  {
+    id: "i5", code: "RPT-2837", title: "Cable theft attempt, signal box 12", type: "Theft", priority: "high", status: "Resolved",
+    section: "Pugu", reporter: "Hamisi Juma", team: "Alpha-01", time: "3 hr ago", lat: -6.8836, lng: 39.0833,
+    phone: "+255 712 000 115", supervisor: "Maj. Daniel Ngowi",
+    description: "Attempted copper cable theft at signal box 12. Suspects fled on approach. Cables intact. Case referred to local police.",
+    attachments: [
+      { id: "a10", type: "image", name: "signal-box-12.jpg", url: "https://images.pexels.com/photos/29033695/pexels-photo-29033695.jpeg", size: "2.0 MB", uploadedBy: "Hamisi Juma", uploadedAt: "3 hr ago" },
+      { id: "a11", type: "video", name: "bodycam-footage.mp4", url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4", thumbnail: "https://images.pexels.com/photos/26928541/pexels-photo-26928541.png", duration: "2:15", size: "12 MB", uploadedBy: "Hamisi Juma", uploadedAt: "3 hr ago" },
+    ],
+  },
+  {
+    id: "i6", code: "RPT-2836", title: "Pedestrian crossing illegally", type: "Trespass", priority: "low", status: "Resolved",
+    section: "Soga", reporter: "Neema Mushi", team: "Alpha-01", time: "5 hr ago", lat: -6.913, lng: 38.93,
+    phone: "+255 713 000 208", supervisor: "Capt. Fatma Said",
+    description: "Pedestrian crossed tracks at unauthorised point. Warned and escorted off corridor. No injury or damage.",
+    attachments: [
+      { id: "a12", type: "image", name: "crossing-point.jpg", url: "https://images.pexels.com/photos/29508383/pexels-photo-29508383.jpeg", size: "1.5 MB", uploadedBy: "Neema Mushi", uploadedAt: "5 hr ago" },
+    ],
+  },
+  {
+    id: "i7", code: "RPT-2835", title: "Officer requesting medical support", type: "Medical", priority: "high", status: "Resolved",
+    section: "Dodoma", reporter: "Pendo Massawe", team: "Echo-05", time: "6 hr ago", lat: -6.1722, lng: 35.7395,
+    phone: "+255 712 000 113", supervisor: "Maj. Pendo Massawe",
+    description: "Field officer reported dizziness and elevated heart rate during patrol. Medical unit dispatched. Officer stabilised and cleared for rest.",
+    attachments: [
+      { id: "a13", type: "audio", name: "medical-dispatch-call.mp3", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", duration: "0:58", size: "780 KB", uploadedBy: "Pendo Massawe", uploadedAt: "6 hr ago" },
+    ],
+  },
+  {
+    id: "i8", code: "RPT-2834", title: "Graffiti on station wall", type: "Vandalism", priority: "low", status: "Review",
+    section: "Ruvu", reporter: "Salim Komba", team: "Bravo-02", time: "9 hr ago", lat: -6.842, lng: 38.694,
+    phone: "+255 712 000 112", supervisor: "Maj. Rehema Sanga",
+    description: "Fresh graffiti on north station wall. Maintenance scheduled for overnight cleaning. No security breach identified.",
+    attachments: [
+      { id: "a14", type: "image", name: "wall-graffiti.jpg", url: "https://images.pexels.com/photos/36644775/pexels-photo-36644775.jpeg", size: "1.9 MB", uploadedBy: "Salim Komba", uploadedAt: "9 hr ago" },
+      { id: "a15", type: "image", name: "wall-wide-shot.jpg", url: "https://images.pexels.com/photos/26928541/pexels-photo-26928541.png", size: "2.2 MB", uploadedBy: "Salim Komba", uploadedAt: "9 hr ago" },
+    ],
+  },
 ];
 
 export type Supervisor = {
@@ -249,4 +336,120 @@ export const NOTIFICATIONS: Notification[] = [
   { id: "n3", title: "Patrol completed", detail: "Bravo-02 cleared Ngerengere section", time: "38 min ago", tone: "success", unread: true },
   { id: "n4", title: "Supervisor acknowledged", detail: "Rehema Sanga acknowledged RPT-2840", time: "1 hr ago", tone: "info", unread: false },
   { id: "n5", title: "Maintenance request", detail: "Track maintenance filed for KM-204", time: "2 hr ago", tone: "warning", unread: false },
+];
+
+export type AlertSeverity = "critical" | "high" | "medium" | "low";
+export type AlertStatus = "active" | "acknowledged" | "resolved";
+export type AlertCategory = "sos" | "infrastructure" | "security" | "comms" | "device" | "ops";
+
+export type AlertItem = {
+  id: string;
+  severity: AlertSeverity;
+  status: AlertStatus;
+  category: AlertCategory;
+  title: string;
+  location: string;
+  time: string;
+  source: string;
+  note: string;
+  unread: boolean;
+};
+
+export const ALERTS: AlertItem[] = [
+  {
+    id: "a1",
+    severity: "critical",
+    status: "active",
+    category: "sos",
+    title: "SOS triggered — Officer Peter Mhina",
+    location: "Kidete station · KM 287",
+    time: "Just now",
+    source: "Charlie-03",
+    note: "Lone officer pressed panic button. No voice response on radio. Auto-dispatch initiated to nearest patrol unit.",
+    unread: true,
+  },
+  {
+    id: "a2",
+    severity: "high",
+    status: "active",
+    category: "infrastructure",
+    title: "Track obstruction detected",
+    location: "KM 312 — between Kidete & Gulwe",
+    time: "8 min ago",
+    source: "Drone sweep",
+    note: "Visual confirms debris on rail. Train SGR-412 advised to reduce speed. Engineering team en route.",
+    unread: true,
+  },
+  {
+    id: "a3",
+    severity: "high",
+    status: "acknowledged",
+    category: "security",
+    title: "Trespassing group reported",
+    location: "Ruvu sector · KM 96",
+    time: "21 min ago",
+    source: "Officer Hassan M.",
+    note: "Four individuals spotted near track perimeter. Group retreating toward access road. Bravo-02 monitoring.",
+    unread: true,
+  },
+  {
+    id: "a4",
+    severity: "medium",
+    status: "acknowledged",
+    category: "comms",
+    title: "Comms degraded — relay switchover",
+    location: "Morogoro relay",
+    time: "44 min ago",
+    source: "System",
+    note: "Primary link packet loss at 18%. Switching to backup link. Signal stable on secondary channel.",
+    unread: false,
+  },
+  {
+    id: "a5",
+    severity: "medium",
+    status: "active",
+    category: "device",
+    title: "Camera offline — station feed",
+    location: "Soga station · CAM-04",
+    time: "1 hr ago",
+    source: "System",
+    note: "Camera feed lost at 13:04. Maintenance team dispatched. ETA 25 minutes. Adjacent CAM-03 covering sector.",
+    unread: false,
+  },
+  {
+    id: "a6",
+    severity: "low",
+    status: "active",
+    category: "ops",
+    title: "Shift handover overdue",
+    location: "Bravo team · Morogoro sector",
+    time: "1 hr ago",
+    source: "System",
+    note: "Outgoing officer has not completed digital handover checklist. Supervisor notified.",
+    unread: false,
+  },
+  {
+    id: "a7",
+    severity: "low",
+    status: "resolved",
+    category: "device",
+    title: "Bodycam battery low",
+    location: "Officer Salma O. · Kilosa",
+    time: "2 hr ago",
+    source: "Device",
+    note: "Battery at 12%. Officer advised to return to charging station. Resolved — device recharged.",
+    unread: false,
+  },
+  {
+    id: "a8",
+    severity: "medium",
+    status: "resolved",
+    category: "security",
+    title: "Perimeter breach cleared",
+    location: "Ngerengere · KM 198",
+    time: "3 hr ago",
+    source: "Alpha-01",
+    note: "Fence cut reported and patched. Patrol completed full perimeter sweep. No further activity detected.",
+    unread: false,
+  },
 ];

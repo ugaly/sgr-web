@@ -55,85 +55,140 @@ function bearing(from: { lat: number; lng: number }, to: { lat: number; lng: num
   return ((Math.atan2(y, x) * 180) / Math.PI + 360) % 360;
 }
 
+function svgUrl(svg: string) {
+  return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
+}
+
+/* Glossy officer pin — gradient disc, status ring, person glyph, drop shadow */
 function officerSvg(color: string, status: string) {
   const ring =
-    status === "sos" ? "#EF4444" : status === "active" ? "#12B76A" : status === "idle" ? "#F79009" : "#98A2B3";
-  const pulse = status === "sos" ? `<circle cx="18" cy="18" r="16" fill="none" stroke="${ring}" stroke-width="2" opacity="0.5"><animate attributeName="r" values="12;20;12" dur="1.4s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.6;0;0.6" dur="1.4s" repeatCount="indefinite"/></circle>` : "";
+    status === "sos" ? "#F04438" : status === "active" ? "#12B76A" : status === "idle" ? "#F79009" : "#98A2B3";
+  const id = status + color.replace("#", "");
+  const pulse =
+    status === "sos"
+      ? `<circle cx="22" cy="22" r="18" fill="${ring}" opacity="0.18"><animate attributeName="r" values="13;20;13" dur="1.5s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.35;0;0.35" dur="1.5s" repeatCount="indefinite"/></circle>`
+      : "";
   return {
-    url:
-      "data:image/svg+xml;charset=UTF-8," +
-      encodeURIComponent(
-        `<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
-          <defs><filter id="s" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.25"/></filter></defs>
-          ${pulse}
-          <circle cx="18" cy="18" r="13" fill="${color}" stroke="${ring}" stroke-width="2.5" filter="url(#s)"/>
-          <circle cx="18" cy="14" r="4.5" fill="#fff"/>
-          <path d="M10 28c0-4.4 3.6-8 8-8s8 3.6 8 8" fill="#fff"/>
-        </svg>`,
-      ),
-    scaledSize: new window.google.maps.Size(32, 32),
+    url: svgUrl(
+      `<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 44 44">
+        <defs>
+          <linearGradient id="og${id}" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="${color}" stop-opacity="0.95"/>
+            <stop offset="100%" stop-color="${color}"/>
+          </linearGradient>
+          <radialGradient id="ogl${id}" cx="0.5" cy="0.3" r="0.6">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.45"/>
+            <stop offset="60%" stop-color="#ffffff" stop-opacity="0"/>
+          </radialGradient>
+          <filter id="ofs${id}" x="-50%" y="-50%" width="200%" height="200%">
+            <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#0b234f" flood-opacity="0.4"/>
+          </filter>
+        </defs>
+        ${pulse}
+        <circle cx="22" cy="22" r="14" fill="url(#og${id})" stroke="#ffffff" stroke-width="3" filter="url(#ofs${id})"/>
+        <circle cx="22" cy="22" r="14" fill="url(#ogl${id})"/>
+        <circle cx="22" cy="18.5" r="4.2" fill="#ffffff"/>
+        <path d="M14.5 30c0-4.1 3.4-7 7.5-7s7.5 2.9 7.5 7" fill="#ffffff"/>
+        <circle cx="32" cy="13" r="4.5" fill="${ring}" stroke="#ffffff" stroke-width="2"/>
+      </svg>`,
+    ),
+    scaledSize: new window.google.maps.Size(36, 36),
     anchor: new window.google.maps.Point(18, 18),
   };
 }
 
+/* Glossy incident teardrop pin with warning glyph */
 function incidentSvg(priority: string) {
   const color = priority === "high" ? "#F04438" : priority === "medium" ? "#F79009" : "#2E90FA";
+  const id = priority;
   return {
-    url:
-      "data:image/svg+xml;charset=UTF-8," +
-      encodeURIComponent(
-        `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28">
-          <circle cx="14" cy="14" r="12" fill="${color}" opacity="0.18"/>
-          <path d="M14 6 L22 22 H6 Z" fill="${color}" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>
-          <circle cx="14" cy="18" r="1.2" fill="#fff"/>
-          <rect x="13.2" y="11" width="1.6" height="5.5" rx="0.8" fill="#fff"/>
-        </svg>`,
-      ),
-    scaledSize: new window.google.maps.Size(26, 26),
-    anchor: new window.google.maps.Point(14, 14),
+    url: svgUrl(
+      `<svg xmlns="http://www.w3.org/2000/svg" width="34" height="40" viewBox="0 0 34 40">
+        <defs>
+          <linearGradient id="ig${id}" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="${color}" stop-opacity="0.92"/>
+            <stop offset="100%" stop-color="${color}"/>
+          </linearGradient>
+          <filter id="ifs${id}" x="-50%" y="-30%" width="200%" height="180%">
+            <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#5a1207" flood-opacity="0.4"/>
+          </filter>
+        </defs>
+        <path d="M17 4 C10.4 4 5 9.4 5 16 C5 25 17 34 17 34 C17 34 29 25 29 16 C29 9.4 23.6 4 17 4 Z"
+              fill="url(#ig${id})" stroke="#ffffff" stroke-width="2.5" filter="url(#ifs${id})"/>
+        <rect x="16" y="10" width="2" height="7" rx="1" fill="#ffffff"/>
+        <circle cx="17" cy="20" r="1.4" fill="#ffffff"/>
+      </svg>`,
+    ),
+    scaledSize: new window.google.maps.Size(30, 35),
+    anchor: new window.google.maps.Point(15, 35),
   };
 }
 
+/* Crisp station marker — gradient ring + white core */
 function stationSvg() {
   return {
-    url:
-      "data:image/svg+xml;charset=UTF-8," +
-      encodeURIComponent(
-        `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-          <circle cx="12" cy="12" r="10" fill="#10367D" stroke="#fff" stroke-width="2.5"/>
-          <rect x="7" y="9" width="10" height="7" rx="1" fill="#fff"/>
-          <rect x="9" y="11" width="2.5" height="2.5" rx="0.5" fill="#10367D"/>
-          <rect x="12.5" y="11" width="2.5" height="2.5" rx="0.5" fill="#10367D"/>
-        </svg>`,
-      ),
-    scaledSize: new window.google.maps.Size(22, 22),
-    anchor: new window.google.maps.Point(12, 12),
+    url: svgUrl(
+      `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22">
+        <defs>
+          <linearGradient id="stg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#3E74CE"/>
+            <stop offset="100%" stop-color="#10367D"/>
+          </linearGradient>
+          <filter id="stsh" x="-40%" y="-40%" width="180%" height="180%">
+            <feDropShadow dx="0" dy="1" stdDeviation="1.2" flood-color="#0b234f" flood-opacity="0.4"/>
+          </filter>
+        </defs>
+        <circle cx="11" cy="11" r="6.5" fill="url(#stg)" stroke="#ffffff" stroke-width="2.5" filter="url(#stsh)"/>
+        <circle cx="11" cy="11" r="2.2" fill="#ffffff"/>
+      </svg>`,
+    ),
+    scaledSize: new window.google.maps.Size(18, 18),
+    anchor: new window.google.maps.Point(9, 9),
   };
 }
 
+/* Premium train marker — glossy navy disc, sky glow, train-front glyph + heading arrow */
 function trainSvg(rotation = 0) {
   return {
-    url:
-      "data:image/svg+xml;charset=UTF-8," +
-      encodeURIComponent(
-        `<svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 52 52">
-          <g transform="rotate(${rotation} 26 26)">
-            <circle cx="26" cy="26" r="22" fill="#5B9BD5" opacity="0.2">
-              <animate attributeName="r" values="18;24;18" dur="2s" repeatCount="indefinite"/>
-              <animate attributeName="opacity" values="0.3;0.08;0.3" dur="2s" repeatCount="indefinite"/>
-            </circle>
-            <circle cx="26" cy="26" r="16" fill="#10367D" stroke="#fff" stroke-width="3"/>
-            <rect x="18" y="14" width="16" height="14" rx="3" fill="#fff"/>
-            <rect x="20" y="16" width="5" height="4" rx="1" fill="#5B9BD5"/>
-            <rect x="27" y="16" width="5" height="4" rx="1" fill="#5B9BD5"/>
-            <circle cx="22" cy="32" r="2" fill="#fff"/>
-            <circle cx="30" cy="32" r="2" fill="#fff"/>
-            <path d="M26 6 L30 14 H22 Z" fill="#F79009" stroke="#fff" stroke-width="1.5"/>
-          </g>
-        </svg>`,
-      ),
+    url: svgUrl(
+      `<svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 52 52">
+        <defs>
+          <radialGradient id="rtrglow" cx="0.5" cy="0.5" r="0.5">
+            <stop offset="0%" stop-color="#5B9BD5" stop-opacity="0.45"/>
+            <stop offset="100%" stop-color="#5B9BD5" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="rtrbody" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#1C50A8"/>
+            <stop offset="100%" stop-color="#081C45"/>
+          </linearGradient>
+          <linearGradient id="rtrgloss" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.5"/>
+            <stop offset="55%" stop-color="#ffffff" stop-opacity="0"/>
+          </linearGradient>
+          <filter id="rtrsh" x="-50%" y="-50%" width="200%" height="200%">
+            <feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-color="#06112b" flood-opacity="0.5"/>
+          </filter>
+        </defs>
+        <circle cx="26" cy="26" r="22" fill="url(#rtrglow)">
+          <animate attributeName="r" values="16;23;16" dur="2.4s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.9;0.3;0.9" dur="2.4s" repeatCount="indefinite"/>
+        </circle>
+        <g transform="rotate(${rotation} 26 26)">
+          <path d="M26 4 L33 16 L19 16 Z" fill="#F79009" stroke="#ffffff" stroke-width="1.5"/>
+        </g>
+        <circle cx="26" cy="26" r="15" fill="url(#rtrbody)" stroke="#ffffff" stroke-width="3" filter="url(#rtrsh)"/>
+        <circle cx="26" cy="26" r="15" fill="url(#rtrgloss)"/>
+        <g transform="translate(26 26)">
+          <path d="M-7 -6 a4 4 0 0 1 4 -4 h6 a4 4 0 0 1 4 4 v7 a2.5 2.5 0 0 1 -2.5 2.5 h-9 A2.5 2.5 0 0 1 -7 1 Z" fill="#ffffff"/>
+          <rect x="-5" y="-5.5" width="4" height="3.2" rx="0.8" fill="#1C50A8"/>
+          <rect x="1" y="-5.5" width="4" height="3.2" rx="0.8" fill="#1C50A8"/>
+          <circle cx="-3" cy="4.5" r="1.5" fill="#1C50A8"/>
+          <circle cx="3" cy="4.5" r="1.5" fill="#1C50A8"/>
+        </g>
+      </svg>`,
+    ),
     scaledSize: new window.google.maps.Size(44, 44),
-    anchor: new window.google.maps.Point(26, 26),
+    anchor: new window.google.maps.Point(22, 22),
   };
 }
 
@@ -380,12 +435,12 @@ export function RailwayMap() {
     <div
       ref={containerRef}
       className={cn(
-        "relative h-full min-h-[420px] overflow-hidden rounded-2xl border border-border bg-card shadow-soft",
+        "relative h-full min-h-[420px] overflow-hidden rounded-2xl border border-border/80 bg-card/80 shadow-soft backdrop-blur-md",
         isFullscreen && "fixed inset-0 z-50 min-h-screen rounded-none border-0",
       )}
     >
       <div className="pointer-events-none absolute left-4 top-4 z-10 flex flex-col gap-2">
-        <div className="pointer-events-auto rounded-xl bg-white/95 px-4 py-3 shadow-elevated ring-1 ring-border backdrop-blur">
+        <div className="pointer-events-auto glass-panel-strong rounded-xl px-4 py-3 shadow-elevated ring-1 ring-border/80">
           <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
             <TrainFront className="size-3.5 text-primary" /> Live Corridor
           </div>

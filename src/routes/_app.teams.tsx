@@ -120,7 +120,7 @@ function TeamsPage() {
             e.stopPropagation();
             openTeam(t);
           }}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-2.5 py-1.5 text-[12px] font-semibold text-primary-foreground transition hover:bg-primary-light"
+          className="inline-flex h-9 items-center gap-1.5 rounded-full bg-primary px-4 text-[12px] font-semibold text-primary-foreground transition hover:bg-primary-light"
         >
           <Eye className="size-3.5" /> View
         </button>
@@ -200,7 +200,7 @@ function TeamsPage() {
           href={`tel:${r.phone}`}
           aria-label={`Call ${r.name}`}
           onClick={(e) => e.stopPropagation()}
-          className="ml-auto grid size-8 place-items-center rounded-lg border border-border bg-card text-muted-foreground transition hover:border-primary/30 hover:bg-accent hover:text-primary"
+          className="ml-auto grid size-9 place-items-center rounded-full border border-border bg-card text-muted-foreground transition hover:border-primary/30 hover:bg-accent hover:text-primary"
         >
           <Phone className="size-4" />
         </a>

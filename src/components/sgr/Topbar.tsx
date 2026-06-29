@@ -4,16 +4,18 @@ import {
   Search,
   ChevronDown,
   Calendar,
-  Sun,
+  Mail,
   Menu,
   Siren,
+  PanelLeftClose,
+  PanelLeftOpen,
   AlertCircle,
   CheckCircle2,
   Info,
   AlertTriangle,
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
-import { toggleMobileSidebar } from "./sidebar-store";
+import { toggleMobileSidebar, useSidebarCollapsed, toggleSidebarCollapsed } from "./sidebar-store";
 import { SosModal } from "./SosModal";
 import { NOTIFICATIONS, SOS_ALERTS, type Notification } from "@/lib/sgr-data";
 
@@ -35,6 +37,7 @@ export function Topbar({
 }: TopbarProps) {
   const [notifOpen, setNotifOpen] = useState(false);
   const [sosOpen, setSosOpen] = useState(false);
+  const collapsed = useSidebarCollapsed();
 
   const unread = NOTIFICATIONS.filter((n) => n.unread).length;
   const activeSos = SOS_ALERTS.filter((s) => s.status === "Active").length;
@@ -48,6 +51,16 @@ export function Topbar({
           className="grid size-10 shrink-0 place-items-center rounded-lg border border-border bg-card text-foreground transition hover:bg-secondary lg:hidden"
         >
           <Menu className="size-[18px]" />
+        </button>
+
+        {/* Desktop collapse / expand toggle */}
+        <button
+          onClick={toggleSidebarCollapsed}
+          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          className="hidden size-10 shrink-0 place-items-center rounded-lg border border-border bg-card text-muted-foreground transition hover:bg-secondary hover:text-foreground lg:grid"
+        >
+          {collapsed ? <PanelLeftOpen className="size-[18px]" /> : <PanelLeftClose className="size-[18px]" />}
         </button>
 
         <div className="min-w-0">
@@ -77,7 +90,7 @@ export function Topbar({
           {/* SOS button */}
           <button
             onClick={() => setSosOpen(true)}
-            className="relative inline-flex items-center gap-1.5 rounded-lg bg-destructive px-2.5 py-2 text-[12px] font-bold uppercase tracking-wider text-white shadow-soft transition hover:bg-destructive/90"
+            className="relative inline-flex h-10 items-center gap-1.5 rounded-full bg-destructive px-4 text-[12px] font-bold uppercase tracking-wider text-white shadow-soft transition hover:bg-destructive/90"
           >
             <Siren className="size-4" />
             <span className="hidden sm:inline">SOS</span>
@@ -91,34 +104,38 @@ export function Topbar({
             )}
           </button>
 
-          <button className="hidden items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-[12px] font-medium text-foreground transition hover:bg-secondary xl:inline-flex">
+          <button className="hidden h-10 items-center gap-2 rounded-full border border-border bg-card px-4 text-[12px] font-medium text-foreground transition hover:bg-secondary xl:inline-flex">
             <Calendar className="size-4 text-muted-foreground" />
             Today · 29 Jun 2026
           </button>
 
-          <button className="hidden size-10 place-items-center rounded-lg border border-border bg-card text-muted-foreground transition hover:bg-secondary hover:text-foreground sm:grid">
-            <Sun className="size-[18px]" />
-          </button>
-
-          {/* Notifications */}
-          <div className="relative">
+          {/* Grouped icon pill — mail + notifications */}
+          <div className="flex h-10 items-center gap-0.5 rounded-full border border-border bg-card/90 px-1 shadow-soft backdrop-blur-md">
             <button
-              onClick={() => setNotifOpen((v) => !v)}
-              aria-label="Notifications"
-              className="relative grid size-10 place-items-center rounded-lg border border-border bg-card text-muted-foreground transition hover:bg-secondary hover:text-foreground"
+              aria-label="Messages"
+              className="grid size-9 place-items-center rounded-full text-foreground/80 transition hover:bg-secondary hover:text-foreground"
             >
-              <Bell className="size-[18px]" />
-              {unread > 0 && (
-                <span className="absolute -right-1 -top-1 grid size-4 place-items-center rounded-full bg-destructive text-[9px] font-bold text-white ring-2 ring-card">
-                  {unread}
-                </span>
-              )}
+              <Mail className="size-[17px] stroke-[1.75]" />
             </button>
 
-            {notifOpen && (
-              <>
-                <div className="fixed inset-0 z-40" onClick={() => setNotifOpen(false)} />
-                <div className="absolute right-0 top-12 z-50 w-[330px] overflow-hidden rounded-xl border border-border bg-card shadow-elevated">
+            <div className="relative">
+              <button
+                onClick={() => setNotifOpen((v) => !v)}
+                aria-label="Notifications"
+                className="relative grid size-9 place-items-center rounded-full text-foreground/80 transition hover:bg-secondary hover:text-foreground"
+              >
+                <Bell className="size-[18px]" />
+                {unread > 0 && (
+                  <span className="absolute right-0.5 top-0.5 grid size-3.5 place-items-center rounded-full bg-destructive text-[8px] font-bold text-white ring-2 ring-card">
+                    {unread}
+                  </span>
+                )}
+              </button>
+
+              {notifOpen && (
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setNotifOpen(false)} />
+                  <div className="absolute right-0 top-11 z-50 w-[330px] overflow-hidden rounded-xl border border-border bg-card/95 shadow-elevated backdrop-blur-xl">
                   <div className="flex items-center justify-between border-b border-border px-4 py-3">
                     <div className="text-[14px] font-bold text-foreground">Notifications</div>
                     <span className="rounded-full bg-destructive/10 px-2 py-0.5 text-[11px] font-bold text-destructive">
@@ -161,13 +178,16 @@ export function Topbar({
                 </div>
               </>
             )}
+            </div>
           </div>
+
+          <span className="hidden h-8 w-px bg-border sm:block" aria-hidden />
 
           <Link
             to="/"
-            className="flex items-center gap-3 rounded-lg border border-border bg-card py-1.5 pl-1.5 pr-2 transition hover:bg-secondary sm:pr-3"
+            className="flex h-10 items-center gap-2.5 rounded-full border border-border bg-card/90 pl-1 pr-2 shadow-soft backdrop-blur-md transition hover:bg-secondary sm:pr-3"
           >
-            <div className="grid size-8 place-items-center rounded-md bg-primary text-[11px] font-bold text-primary-foreground">
+            <div className="grid size-8 place-items-center rounded-full bg-primary text-[11px] font-bold text-primary-foreground">
               EM
             </div>
             <div className="hidden text-left leading-tight sm:block">

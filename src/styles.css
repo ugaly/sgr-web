@@ -129,6 +129,19 @@
 }
 .animate-ping-slow { animation: ping-slow 2.2s cubic-bezier(0, 0, 0.2, 1) infinite; }
 
+@keyframes welcomeIn {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes floaty {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-10px) rotate(1deg); }
+}
+@keyframes shadowPulse {
+  0%, 100% { transform: translateX(-50%) scaleX(1); opacity: 0.25; }
+  50% { transform: translateX(-50%) scaleX(0.8); opacity: 0.15; }
+}
+
 .sgr-station-label {
   background: rgba(255, 255, 255, 0.92);
   border: 1px solid rgba(16, 54, 125, 0.12);
@@ -136,4 +149,21 @@
   padding: 2px 6px;
   box-shadow: 0 2px 8px rgba(16, 24, 40, 0.08);
   white-space: nowrap;
+}
+
+/* Reusable glass surfaces — login + dashboard */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+.glass-panel-strong {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+.glass-tint {
+  background: rgba(239, 244, 251, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }

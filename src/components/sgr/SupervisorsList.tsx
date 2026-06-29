@@ -7,8 +7,8 @@ function initials(name: string) {
 
 export function SupervisorsList() {
   return (
-    <section className="rounded-2xl border border-border bg-card shadow-soft">
-      <header className="flex items-center justify-between px-6 py-5 border-b border-border">
+    <section className="overflow-hidden rounded-2xl border border-border/80 bg-card/80 shadow-soft backdrop-blur-md">
+      <header className="flex items-center justify-between border-b border-border/70 px-6 py-5 glass-tint">
         <div>
           <h3 className="text-[15px] font-bold text-foreground">Supervisors on Duty</h3>
           <p className="text-xs text-muted-foreground mt-0.5">{SUPERVISORS.filter(s => s.online).length} of {SUPERVISORS.length} online</p>
@@ -40,10 +40,10 @@ export function SupervisorsList() {
               </div>
             </div>
             <div className="flex items-center gap-1">
-              <button className="grid size-8 place-items-center rounded-lg bg-secondary text-primary hover:bg-accent">
+              <button className="grid size-8 place-items-center rounded-full border border-border bg-card/80 text-primary backdrop-blur-sm transition hover:bg-accent">
                 <Phone className="size-4" />
               </button>
-              <button className="grid size-8 place-items-center rounded-lg bg-secondary text-primary hover:bg-accent">
+              <button className="grid size-8 place-items-center rounded-full border border-border bg-card/80 text-primary backdrop-blur-sm transition hover:bg-accent">
                 <MessageSquare className="size-4" />
               </button>
             </div>

@@ -45,63 +45,122 @@ function bearing(from: { lat: number; lng: number }, to: { lat: number; lng: num
   return ((Math.atan2(y, x) * 180) / Math.PI + 360) % 360;
 }
 
+function svgUrl(svg: string) {
+  return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
+}
+
+/* Professional SOS pin — teardrop with gradient, gloss, pulsing rings + siren glyph */
 function sosSvg(pulse = true) {
-  const anim = pulse
-    ? `<circle cx="30" cy="30" r="26" fill="#F04438" opacity="0.25">
-         <animate attributeName="r" values="16;28;16" dur="1.5s" repeatCount="indefinite"/>
-         <animate attributeName="opacity" values="0.4;0;0.4" dur="1.5s" repeatCount="indefinite"/>
+  const rings = pulse
+    ? `<circle cx="36" cy="34" r="20" fill="#F04438" opacity="0.18">
+         <animate attributeName="r" values="14;30;14" dur="1.8s" repeatCount="indefinite"/>
+         <animate attributeName="opacity" values="0.35;0;0.35" dur="1.8s" repeatCount="indefinite"/>
+       </circle>
+       <circle cx="36" cy="34" r="14" fill="#F04438" opacity="0.22">
+         <animate attributeName="r" values="10;22;10" dur="1.8s" begin="0.4s" repeatCount="indefinite"/>
+         <animate attributeName="opacity" values="0.4;0;0.4" dur="1.8s" begin="0.4s" repeatCount="indefinite"/>
        </circle>`
-    : `<circle cx="30" cy="30" r="20" fill="#F04438" opacity="0.15"/>`;
+    : "";
   return {
-    url:
-      "data:image/svg+xml;charset=UTF-8," +
-      encodeURIComponent(
-        `<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60">
-          ${anim}
-          <circle cx="30" cy="30" r="12" fill="#F04438" stroke="#fff" stroke-width="2.5"/>
-          <path d="M30 22 v8 M30 35 v0.5" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
-        </svg>`,
-      ),
-    scaledSize: new window.google.maps.Size(pulse ? 48 : 36, pulse ? 48 : 36),
-    anchor: new window.google.maps.Point(pulse ? 24 : 18, pulse ? 24 : 18),
+    url: svgUrl(
+      `<svg xmlns="http://www.w3.org/2000/svg" width="72" height="80" viewBox="0 0 72 80">
+        <defs>
+          <linearGradient id="sosg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#FF6A5E"/>
+            <stop offset="55%" stop-color="#F04438"/>
+            <stop offset="100%" stop-color="#C01A0E"/>
+          </linearGradient>
+          <radialGradient id="sosgloss" cx="0.5" cy="0.32" r="0.6">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.55"/>
+            <stop offset="60%" stop-color="#ffffff" stop-opacity="0"/>
+          </radialGradient>
+          <filter id="sosShadow" x="-50%" y="-30%" width="200%" height="180%">
+            <feDropShadow dx="0" dy="3" stdDeviation="3.5" flood-color="#7a1109" flood-opacity="0.45"/>
+          </filter>
+        </defs>
+        ${rings}
+        <path d="M36 8 C22.7 8 12 18.7 12 32 C12 50 36 70 36 70 C36 70 60 50 60 32 C60 18.7 49.3 8 36 8 Z"
+              fill="url(#sosg)" stroke="#ffffff" stroke-width="3.5" filter="url(#sosShadow)"/>
+        <path d="M36 8 C22.7 8 12 18.7 12 32 C12 50 36 70 36 70 C36 70 60 50 60 32 C60 18.7 49.3 8 36 8 Z"
+              fill="url(#sosgloss)"/>
+        <g transform="translate(36 32)">
+          <path d="M-9 6 a9 9 0 0 1 18 0 Z" fill="#ffffff"/>
+          <rect x="-1.6" y="-12" width="3.2" height="11" rx="1.6" fill="#ffffff"/>
+          <circle cx="0" cy="-13.5" r="2.4" fill="#ffffff"/>
+          <path d="M-12 -3 l-3.5 -2 M12 -3 l3.5 -2" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+        </g>
+      </svg>`,
+    ),
+    scaledSize: new window.google.maps.Size(pulse ? 56 : 42, pulse ? 62 : 47),
+    anchor: new window.google.maps.Point(pulse ? 28 : 21, pulse ? 62 : 47),
   };
 }
 
+/* Crisp station marker — gradient ring, white core, soft shadow */
 function stationSvg() {
   return {
-    url:
-      "data:image/svg+xml;charset=UTF-8," +
-      encodeURIComponent(
-        `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
-          <circle cx="8" cy="8" r="5" fill="#fff" stroke="#10367D" stroke-width="2.5"/>
-        </svg>`,
-      ),
-    scaledSize: new window.google.maps.Size(12, 12),
-    anchor: new window.google.maps.Point(6, 6),
+    url: svgUrl(
+      `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22">
+        <defs>
+          <linearGradient id="stg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#3E74CE"/>
+            <stop offset="100%" stop-color="#10367D"/>
+          </linearGradient>
+          <filter id="stsh" x="-40%" y="-40%" width="180%" height="180%">
+            <feDropShadow dx="0" dy="1" stdDeviation="1.2" flood-color="#0b234f" flood-opacity="0.4"/>
+          </filter>
+        </defs>
+        <circle cx="11" cy="11" r="6.5" fill="url(#stg)" stroke="#ffffff" stroke-width="2.5" filter="url(#stsh)"/>
+        <circle cx="11" cy="11" r="2.2" fill="#ffffff"/>
+      </svg>`,
+    ),
+    scaledSize: new window.google.maps.Size(16, 16),
+    anchor: new window.google.maps.Point(8, 8),
   };
 }
 
+/* Premium train marker — glossy navy disc, sky glow, clean train-front glyph + heading arrow */
 function trainSvg(rotation = 0) {
   return {
-    url:
-      "data:image/svg+xml;charset=UTF-8," +
-      encodeURIComponent(
-        `<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 44 44">
-          <g transform="rotate(${rotation} 22 22)">
-            <circle cx="22" cy="22" r="18" fill="#5B9BD5" opacity="0.2">
-              <animate attributeName="r" values="14;20;14" dur="2s" repeatCount="indefinite"/>
-              <animate attributeName="opacity" values="0.3;0.08;0.3" dur="2s" repeatCount="indefinite"/>
-            </circle>
-            <circle cx="22" cy="22" r="13" fill="#10367D" stroke="#fff" stroke-width="2.5"/>
-            <rect x="16" y="13" width="12" height="11" rx="2.5" fill="#fff"/>
-            <rect x="17.5" y="14.5" width="4" height="3" rx="0.8" fill="#5B9BD5"/>
-            <rect x="22.5" y="14.5" width="4" height="3" rx="0.8" fill="#5B9BD5"/>
-            <path d="M22 5 L25 12 H19 Z" fill="#F79009" stroke="#fff" stroke-width="1.2"/>
-          </g>
-        </svg>`,
-      ),
-    scaledSize: new window.google.maps.Size(38, 38),
-    anchor: new window.google.maps.Point(19, 19),
+    url: svgUrl(
+      `<svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 52 52">
+        <defs>
+          <radialGradient id="trglow" cx="0.5" cy="0.5" r="0.5">
+            <stop offset="0%" stop-color="#5B9BD5" stop-opacity="0.45"/>
+            <stop offset="100%" stop-color="#5B9BD5" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="trbody" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#1C50A8"/>
+            <stop offset="100%" stop-color="#081C45"/>
+          </linearGradient>
+          <linearGradient id="trgloss" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.5"/>
+            <stop offset="55%" stop-color="#ffffff" stop-opacity="0"/>
+          </linearGradient>
+          <filter id="trsh" x="-50%" y="-50%" width="200%" height="200%">
+            <feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-color="#06112b" flood-opacity="0.5"/>
+          </filter>
+        </defs>
+        <circle cx="26" cy="26" r="22" fill="url(#trglow)">
+          <animate attributeName="r" values="16;23;16" dur="2.4s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.9;0.3;0.9" dur="2.4s" repeatCount="indefinite"/>
+        </circle>
+        <g transform="rotate(${rotation} 26 26)">
+          <path d="M26 4 L33 16 L19 16 Z" fill="#F79009" stroke="#ffffff" stroke-width="1.5"/>
+        </g>
+        <circle cx="26" cy="26" r="15" fill="url(#trbody)" stroke="#ffffff" stroke-width="3" filter="url(#trsh)"/>
+        <circle cx="26" cy="26" r="15" fill="url(#trgloss)"/>
+        <g transform="translate(26 26)">
+          <path d="M-7 -6 a4 4 0 0 1 4 -4 h6 a4 4 0 0 1 4 4 v7 a2.5 2.5 0 0 1 -2.5 2.5 h-9 A2.5 2.5 0 0 1 -7 1 Z" fill="#ffffff"/>
+          <rect x="-5" y="-5.5" width="4" height="3.2" rx="0.8" fill="#1C50A8"/>
+          <rect x="1" y="-5.5" width="4" height="3.2" rx="0.8" fill="#1C50A8"/>
+          <circle cx="-3" cy="4.5" r="1.5" fill="#1C50A8"/>
+          <circle cx="3" cy="4.5" r="1.5" fill="#1C50A8"/>
+        </g>
+      </svg>`,
+    ),
+    scaledSize: new window.google.maps.Size(44, 44),
+    anchor: new window.google.maps.Point(22, 22),
   };
 }
 

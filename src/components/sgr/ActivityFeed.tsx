@@ -4,94 +4,94 @@ import { AlertCircle, CheckCircle2, Info, AlertTriangle, MoreHorizontal } from "
 const TONE = {
   danger: {
     icon: AlertCircle,
-    badge: "bg-destructive text-white",
-    soft: "bg-destructive/10 text-destructive ring-destructive/20",
-    rail: "from-destructive/40 to-destructive/0",
-    label: "Critical",
+    node: "border-destructive/30 bg-destructive/8 text-destructive",
+    dot: "bg-destructive",
   },
   success: {
     icon: CheckCircle2,
-    badge: "bg-success text-white",
-    soft: "bg-success/10 text-success ring-success/20",
-    rail: "from-success/40 to-success/0",
-    label: "Resolved",
+    node: "border-success/30 bg-success/8 text-success",
+    dot: "bg-success",
   },
   info: {
     icon: Info,
-    badge: "bg-info text-white",
-    soft: "bg-info/10 text-info ring-info/20",
-    rail: "from-info/40 to-info/0",
-    label: "Update",
+    node: "border-info/30 bg-info/8 text-info",
+    dot: "bg-info",
   },
   warning: {
     icon: AlertTriangle,
-    badge: "bg-warning text-white",
-    soft: "bg-warning/10 text-warning ring-warning/20",
-    rail: "from-warning/40 to-warning/0",
-    label: "Warning",
+    node: "border-warning/30 bg-warning/8 text-warning",
+    dot: "bg-warning",
   },
 } as const;
 
 export function ActivityFeed() {
   return (
-    <section className="rounded-2xl border border-border bg-card shadow-soft">
-      <header className="flex items-center justify-between px-6 py-5 border-b border-border">
+    <section className="flex h-full min-h-[420px] flex-col overflow-hidden rounded-2xl border border-border/80 bg-card/80 shadow-soft backdrop-blur-md">
+      <header className="flex items-center justify-between border-b border-border/70 px-6 py-5 glass-tint">
         <div>
           <h3 className="text-[15px] font-bold text-foreground">Activity Timeline</h3>
-          <p className="text-xs text-muted-foreground mt-0.5">Live operations stream · auto-refresh</p>
+          <p className="mt-0.5 text-xs text-muted-foreground">Live operations stream</p>
         </div>
         <div className="flex items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-success/10 px-2.5 py-1 text-[11px] font-semibold text-success ring-1 ring-success/20">
-            <span className="relative flex size-1.5">
-              <span className="absolute inline-flex h-full w-full animate-ping-slow rounded-full bg-success/60" />
-              <span className="relative inline-flex size-1.5 rounded-full bg-success" />
-            </span>
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-success/10 px-2.5 py-1 text-[11px] font-semibold text-success">
+            <span className="size-1.5 rounded-full bg-success" />
             Live
           </span>
-          <button className="grid size-8 place-items-center rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground">
+          <button className="grid size-8 place-items-center rounded-full border border-border bg-card text-muted-foreground transition hover:bg-secondary hover:text-foreground">
             <MoreHorizontal className="size-4" />
           </button>
         </div>
       </header>
 
-      <ol className="relative px-6 py-5">
-        {/* Gradient timeline rail */}
-        <span className="absolute left-[39px] top-8 bottom-8 w-[2px] rounded-full bg-gradient-to-b from-border via-border to-transparent" />
-
+      <ol className="relative flex-1 overflow-y-auto px-5 py-5">
         {ACTIVITY.map((a, i) => {
           const t = TONE[a.tone];
           const Icon = t.icon;
+          const isLast = i === ACTIVITY.length - 1;
+          const isLatest = i === 0;
+
           return (
-            <li key={a.id} className="relative flex gap-4 pb-5 last:pb-0">
-              {/* Node */}
-              <div className="relative z-10 shrink-0">
-                <div className={`grid size-10 place-items-center rounded-xl ring-[3px] ring-card shadow-soft ${t.badge}`}>
-                  <Icon className="size-[18px]" />
+            <li key={a.id} className="relative flex gap-4 pb-0 last:pb-0">
+              {/* Stepper column */}
+              <div className="flex w-9 shrink-0 flex-col items-center">
+                <div
+                  className={`relative z-10 grid size-9 place-items-center rounded-full border bg-card shadow-soft ${t.node}`}
+                >
+                  <Icon className="size-[15px] stroke-[2.25]" />
+                  {isLatest && (
+                    <span className={`absolute -right-0.5 -top-0.5 size-2 rounded-full ${t.dot} ring-2 ring-card`} />
+                  )}
                 </div>
-                {i === 0 && (
-                  <span className="absolute -right-0.5 -top-0.5 grid size-3.5 place-items-center rounded-full bg-card">
-                    <span className="size-2 rounded-full bg-success animate-pulse" />
-                  </span>
+                {!isLast && (
+                  <div className="my-1 w-px flex-1 min-h-[28px] bg-border" aria-hidden />
                 )}
               </div>
 
-              {/* Card */}
-              <div className="min-w-0 flex-1 rounded-xl border border-border bg-secondary/30 px-4 py-3 transition-colors hover:bg-secondary/60">
-                <div className="flex items-center justify-between gap-3">
-                  <span className={`inline-flex rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ring-1 ${t.soft}`}>
-                    {t.label}
-                  </span>
-                  <span className="text-[11px] font-medium text-muted-foreground">{a.time}</span>
+              {/* Content */}
+              <div
+                className={`mb-4 min-w-0 flex-1 rounded-xl border px-3.5 py-3 transition-colors ${
+                  isLatest
+                    ? "border-primary/15 bg-accent/50 shadow-soft"
+                    : "border-transparent bg-transparent hover:border-border/80 hover:bg-secondary/40"
+                }`}
+              >
+                <div className="flex items-baseline justify-between gap-3">
+                  <span className="text-[12px] font-semibold text-foreground">{a.time}</span>
+                  {isLatest && (
+                    <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
+                      Latest
+                    </span>
+                  )}
                 </div>
-                <p className="mt-1.5 text-[13.5px] leading-snug text-foreground">{a.text}</p>
+                <p className="mt-1 text-[13px] leading-relaxed text-foreground/90">{a.text}</p>
               </div>
             </li>
           );
         })}
       </ol>
 
-      <div className="border-t border-border px-6 py-3">
-        <button className="text-[12px] font-semibold text-primary hover:text-primary-light">
+      <div className="border-t border-border/70 px-6 py-3 glass-tint">
+        <button className="text-[12px] font-semibold text-primary transition hover:text-primary-light">
           View full timeline →
         </button>
       </div>

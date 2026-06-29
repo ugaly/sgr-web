@@ -14,6 +14,7 @@ import {
 
 import { Topbar } from "@/components/sgr/Topbar";
 import { DataTable, type Column } from "@/components/sgr/DataTable";
+import { AddSupervisorModal } from "@/components/sgr/AddSupervisorModal";
 import { SUPERVISORS, type Supervisor } from "@/lib/sgr-data";
 
 export const Route = createFileRoute("/_app/supervisors")({
@@ -42,6 +43,7 @@ const STATUS_STYLE: Record<Supervisor["status"], string> = {
 
 function SupervisorsPage() {
   const [status, setStatus] = useState<StatusFilter>("All");
+  const [addOpen, setAddOpen] = useState(false);
 
   const data = useMemo(
     () => (status === "All" ? SUPERVISORS : SUPERVISORS.filter((s) => s.status === status)),
@@ -122,14 +124,14 @@ function SupervisorsPage() {
       header: "Actions",
       align: "right",
       cell: (s) => (
-        <div className="flex items-center justify-end gap-1.5" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center justify-end gap-2" onClick={(e) => e.stopPropagation()}>
           <IconAction href={`tel:${s.phone}`} label={`Call ${s.name}`}>
             <Phone className="size-4" />
           </IconAction>
           <IconAction href={`mailto:${s.email}`} label={`Email ${s.name}`}>
             <Mail className="size-4" />
           </IconAction>
-          <button className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-2.5 py-1.5 text-[12px] font-semibold text-primary-foreground transition hover:bg-primary-light">
+          <button className="inline-flex h-9 items-center gap-1.5 rounded-full bg-primary px-4 text-[12px] font-semibold text-primary-foreground transition hover:bg-primary-light">
             <ShieldCheck className="size-3.5" /> Assign
           </button>
         </div>
@@ -177,13 +179,18 @@ function SupervisorsPage() {
               <button className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-border bg-card px-3 text-xs font-semibold text-foreground transition hover:bg-secondary">
                 <Download className="size-3.5" /> Export
               </button>
-              <button className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-primary px-3 text-xs font-semibold text-primary-foreground transition hover:bg-primary-light">
+              <button
+                onClick={() => setAddOpen(true)}
+                className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-primary px-3 text-xs font-semibold text-primary-foreground transition hover:bg-primary-light"
+              >
                 <Plus className="size-3.5" /> Add supervisor
               </button>
             </>
           }
         />
       </div>
+
+      <AddSupervisorModal open={addOpen} onOpenChange={setAddOpen} />
     </>
   );
 }
@@ -201,7 +208,7 @@ function IconAction({
     <a
       href={href}
       aria-label={label}
-      className="grid size-8 place-items-center rounded-lg border border-border bg-card text-muted-foreground transition hover:border-primary/30 hover:bg-accent hover:text-primary"
+      className="grid size-9 place-items-center rounded-full border border-border bg-card text-muted-foreground transition hover:border-primary/30 hover:bg-accent hover:text-primary"
     >
       {children}
     </a>

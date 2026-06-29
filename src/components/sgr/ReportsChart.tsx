@@ -11,8 +11,8 @@ import {
 
 export function ReportsChart() {
   return (
-    <section className="rounded-2xl border border-border bg-card shadow-soft">
-      <header className="flex items-center justify-between px-6 py-5 border-b border-border">
+    <section className="overflow-hidden rounded-2xl border border-border/80 bg-card/80 shadow-soft backdrop-blur-md">
+      <header className="flex items-center justify-between border-b border-border/70 px-6 py-5 glass-tint">
         <div>
           <h3 className="text-[15px] font-bold text-foreground">Incident Trend</h3>
           <p className="text-xs text-muted-foreground mt-0.5">Submitted vs resolved this week</p>

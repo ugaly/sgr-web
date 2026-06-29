@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Users, ShieldCheck, FileWarning, Activity } from "lucide-react";
 
 import { Topbar } from "@/components/sgr/Topbar";
+import { WelcomeBanner } from "@/components/sgr/WelcomeBanner";
 import { StatCard } from "@/components/sgr/StatCard";
 import { RailwayMap } from "@/components/sgr/RailwayMap";
 import { IncidentsTable } from "@/components/sgr/IncidentsTable";
@@ -22,15 +23,19 @@ function Dashboard() {
     <>
       <Topbar />
       <div className="space-y-6 p-4 sm:p-6 lg:p-8">
+        <WelcomeBanner />
+
         <section className="grid gap-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
-          <StatCard label="Officers On Duty" value="78" delta="+4.2%" trend="up" icon={Users} tone="primary" hint="of 92 total · 6 supervisors active" />
+          <StatCard label="Officers On Duty" value="78" delta="+4.2%" trend="up" icon={Users} tone="primary" hint="of 92 on duty" featured />
           <StatCard label="Open Incidents" value="14" delta="-2" trend="down" icon={FileWarning} tone="warning" hint="3 high priority · 1 SOS active" />
           <StatCard label="Corridor Coverage" value="96%" delta="+1.1%" trend="up" icon={ShieldCheck} tone="success" hint="Dar — Dodoma · 9/10 stations" />
           <StatCard label="Avg Response" value="4m 12s" delta="-18s" trend="up" icon={Activity} tone="sky" hint="from alert to first acknowledgement" />
         </section>
 
         <section className="grid gap-6 grid-cols-1 xl:grid-cols-3">
-          <div className="xl:col-span-2"><RailwayMap /></div>
+          <div id="live-corridor-map" className="xl:col-span-2 scroll-mt-24">
+            <RailwayMap />
+          </div>
           <div className="xl:col-span-1"><ActivityFeed /></div>
         </section>
 
