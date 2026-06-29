@@ -32,8 +32,10 @@ export function useMobileSidebar() {
 const COLLAPSE_KEY = "sgr.sidebar.collapsed";
 
 function readCollapsed(): boolean {
-  if (typeof window === "undefined") return false;
-  return window.localStorage.getItem(COLLAPSE_KEY) === "1";
+  if (typeof window === "undefined") return true;
+  const stored = window.localStorage.getItem(COLLAPSE_KEY);
+  if (stored === null) return true;
+  return stored === "1";
 }
 
 let collapsed = readCollapsed();
@@ -62,6 +64,6 @@ export function useSidebarCollapsed() {
       return () => collapseListeners.delete(cb);
     },
     () => collapsed,
-    () => false,
+    () => true,
   );
 }
